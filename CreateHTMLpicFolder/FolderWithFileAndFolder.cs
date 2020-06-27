@@ -205,15 +205,38 @@ namespace CreateHTMLpicFolder
                 sb.Append("\n");
             }
             sb.Append("\t\t<td> <img src='");
-            var content_name_for_img = content;
-            if (content_name_for_img.Contains('\''))
+            var content_newname = content;
+            if (content_newname.Contains('#') ||
+                content_newname.Contains('$') ||
+                content_newname.Contains(';') ||
+                content_newname.Contains('!') ||
+                content_newname.Contains('"') ||
+                content_newname.Contains('~') ||
+                content_newname.Contains('%') ||  
+                content_newname.Contains('&') ||
+                content_newname.Contains('@') ||
+                content_newname.Contains('`') 
+                )
             {
-                content_name_for_img = content_name_for_img.Replace("'", "&#39;");
-                ShowToConsole(StepLevel, content + "->" + content_name_for_img);
+                content_newname = content_newname.Replace("#", "_");
+                content_newname = content_newname.Replace("$", "_");
+                content_newname = content_newname.Replace(";", "_");
+                content_newname = content_newname.Replace("!", "_");
+                content_newname = content_newname.Replace("'", "_");
+                content_newname = content_newname.Replace("~", "_");
+                content_newname = content_newname.Replace("%", "_");
+                content_newname = content_newname.Replace("&", "_");
+                content_newname = content_newname.Replace("@", "_");
+                content_newname = content_newname.Replace("`", "_");
+
+                System.IO.File.Move(MyFolderPath +"\\" +content, MyFolderPath + "\\"+content_newname);
+                System.IO.File.Move(MyFolderPath + "\\" + content +".jpg", MyFolderPath + "\\" + content_newname +".jpg");
+
+                ShowToConsole(StepLevel, content + "->" + content_newname);
             }
-            sb.Append(content_name_for_img);
+            sb.Append(content_newname);
             sb.Append(".jpg' height='" + ParaPicHeight.ToString() + "' width='" + ParaPicWidth.ToString() + "'></img> <br> <a href=\"");
-            sb.Append(content);
+            sb.Append(content_newname);
             sb.Append("\">CLICK</a> </td>");
 
             if (content_index % ParaMaxColumn == (ParaMaxColumn - 1))
